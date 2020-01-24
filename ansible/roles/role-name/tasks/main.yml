@@ -4,7 +4,7 @@
   yum:
     name: unzip
 
-- name: mkdir {{ app_name }}
+- name: "mkdir {{ app_name }}"
   file:
     path: "{{ item }}/{{ app_name }}"
     owner: root
@@ -16,12 +16,12 @@
     - /var/log
     - /var/run
 
-- name: copy /etc/tmpfiles.d/{{ app_name }}.conf
-  templates:
+- name: "copy /etc/tmpfiles.d/{{ app_name }}.conf"
+  template:
     src: tmpfiles_d.conf
     dest: "/etc/tmpfiles.d/{{ app_name }}.conf"
 
-- name: copy /etc/systemd/system/{{ app_name }}
+- name: "copy /etc/systemd/system/{{ app_name }}"
   template:
     src: service-file.service
     dest: "/etc/systemd/system/{{ app_name }}.service"
@@ -30,10 +30,10 @@
 
 - name: systemctl daemon reload
   systemd:
-    name: {{ app_name }}
+    name: "{{ app_name }}"
     daemon_reload: yes
 
-- name: copy {{ app_name }}-0.1.0-SNAPSHOT.zip
+- name: "copy {{ app_name }}-0.1.0-SNAPSHOT.zip"
   copy:
     src: "{{ app_name }}-0.1.0-SNAPSHOT.zip"
     dest: "/opt/{{ app_name }}/{{ app_name }}-0.1.0-SNAPSHOT.zip"
@@ -43,7 +43,7 @@
     path: "/opt/{{ app_name }}/{{ app_name }}-0.1.0-SNAPSHOT"
     state: absent
 
-- name: unzip {{ app_name }}
+- name: "unzip {{ app_name }}"
   unarchive:
     remote_src: yes
     src: "/opt/{{ app_name }}/{{ app_name }}-0.1.0-SNAPSHOT.zip"
@@ -63,13 +63,13 @@
     owner: root
     group: root
 
-- name: {{ app_name }} stop
+- name: "{{ app_name }} stop"
   systemd:
-    name: {{ app_name }}
+    name: "{{ app_name }}"
     state: stopped
 
-- name: {{ app_name }} start
+- name: "{{ app_name }} start"
   systemd:
-    name: {{ app_name }}
+    name: "{{ app_name }}"
     state: started
     enabled: yes
