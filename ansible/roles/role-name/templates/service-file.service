@@ -1,0 +1,17 @@
+[Unit]
+Description={{ app_name }}
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/opt/{{ app_name }}/{{ app_name }}-0.1.0-SNAPSHOT
+Environment='JAVA_OPTS=-Xms64M -Xmx64M -XX:MaxMetaspaceSize=256M \
+-verbose:gc -Xloggc:/var/log/{{ app_name }}/gc.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps \
+-XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=10M'
+PIDFile=/var/run/{{ app_name }}/{{ app_name }}.pid
+ExecStart=/bin/sh -c "sleep 30s; exec /opt/{{ app_name }}/{{ app_name }}-0.1.0-SNAPSHOT/bin/{{ app_name }} -Dpidfile.path=/var/run/{{ app_name }}/{{ app_name }}.pid -Dhttp.port=127.0.0.1 -Dhttp.port=9000 -Dconfig.file=/etc/{{ app_name }}/application.conf -Dlogback.configurationFile=/etc/{{ app_name }}/logback.xml >> /var/log/{{ app_name }}/console.log 2>&1"
+ExecStop=/usr/bin/kill -QUIT $MAINPID
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
