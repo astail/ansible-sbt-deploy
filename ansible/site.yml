@@ -1,6 +1,6 @@
 ---
 
-- hosts: app
+- hosts: local
   become: yes
   roles:
     - role-name
